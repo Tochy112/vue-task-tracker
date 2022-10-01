@@ -1,8 +1,13 @@
 <template>
   <div class="container">
       
-    <Header title="Task Tracker" />  
-    <Tasks :tasks="task"/>
+    <Header @toggle-add-task="toggleAddTask" title="Task Tracker" :showAddTask="showAddTask" /> 
+
+    <div v-show ="showAddTask">
+      <AddTask @add-task="addTask" />
+    </div> 
+    
+    <Tasks  @toggle_task="toggleTask" @delete_task="deleteTask" :tasks="tasks"/>
 
   </div>
 </template>
@@ -11,6 +16,7 @@
 
 import Header from './components/Header';
 import Tasks from './components/Tasks';
+import AddTask from './components/AddTask';
 
 export default {
   name: 'App',
@@ -18,34 +24,60 @@ export default {
   components: {
     Header,
     Tasks,
+    AddTask,
 },
+
+  methods: {
+    toggleAddTask(){
+      this.showAddTask = !this.showAddTask
+    },
+
+    addTask(task){
+      this.tasks = [...this.tasks, task]
+    },
+
+    deleteTask(id){
+      confirm("Delete this task?") ?
+      this.tasks = this.tasks.filter((task) => task.id !== id)
+      : "";
+    },
+
+    toggleTask(id){
+      this.tasks = this.tasks.map((task) => task.id === id ?
+        {...task, reminder: !task.reminder} 
+        : task
+      )
+    }
+  },
 
   data(){
     return{
-      task: []
+      tasks: [],
+      showAddTask : true
     }
   },
 
   created(){
-    this.task = [
-      {
-        id: 1,
-        text: "Doctors Appointment",
-        day: "March 1st at 2:30pm",
-        reminder: true,
-      },
-      {
-        id: 2,
-        text: "Meeting at School",
-        day: "March 3rd at 1:30pm",
-        reminder: true,
-      },
-      {
-        id: 3,
-        text: "Food Shopping",
-        day: "March 3rd at 10:00am",
-        reminder: false,
-      },
+    this.tasks = [
+      
+      // {
+      //   id: 1,
+      //   text: "Doctors Appointment",
+      //   day: "March 1st at 2:30pm",
+      //   reminder: true,
+      // },
+      // {
+      //   id: 2,
+      //   text: "Meeting at School",
+      //   day: "March 3rd at 1:30pm",
+      //   reminder: true,
+      // },
+      // {
+      //   id: 3,
+      //   text: "Food Shopping",
+      //   day: "March 3rd at 10:00am",
+      //   reminder: false,
+      // },
     ]
 
   }

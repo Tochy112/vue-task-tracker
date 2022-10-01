@@ -2,7 +2,7 @@
 
     <div>
         <div :key="task.id" v-for="task in tasks">
-            <Task :task ="task"/>
+            <Task  @toggle_task="$emit('toggle_task', task.id)" @delete_task="$emit('delete_task', task.id)" :task ="task"/>
         </div>
     </div>
 
@@ -20,6 +20,10 @@
 
         components: {
             Task
-        }
+        },
+        emit: [
+            "delete_task",
+            "toggle_task"
+        ],
     }
 </script>
